@@ -1,0 +1,29 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body {
+  height: 100%;
+}
+
+body {
+  @apply bg-surface-sunken text-ink font-sans antialiased;
+}
+
+::selection {
+  @apply bg-amber-100 text-navy-800;
+}
+
+/* Subtle, deliberate focus ring — kept visible for accessibility */
+:focus-visible {
+  outline: 2px solid #E8A33D;
+  outline-offset: 2px;
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background-color: #D6DCE9;
+  border-radius: 999px;
+}

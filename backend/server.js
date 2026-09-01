@@ -11,7 +11,7 @@ const app = express();
 
 // TODO: Deploy hone ke baad is URL ko apne deployed frontend (Vercel) URL se replace kar dein
 // Example: "https://your-frontend.vercel.app"
-const allowedOrigins = ["https://complain-system-l8tr.vercel.app/login"];
+const allowedOrigins = ["https://complain-system-l8tr.vercel.app"];
 
 app.use(
   cors({

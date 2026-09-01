@@ -1,7 +1,7 @@
 const User = require("../models/User");
 
-// @route  GET /api/users?status=pending
-// @desc   Admin: list all users, optionally filtered by status
+// @route   GET /api/users?status=pending
+// @desc    Admin: list all users, optionally filtered by status
 const getUsers = async (req, res) => {
   try {
     const { status, role, search } = req.query;
@@ -22,7 +22,7 @@ const getUsers = async (req, res) => {
   }
 };
 
-// @route  GET /api/users/stats
+// @route   GET /api/users/stats
 const getUserStats = async (req, res) => {
   try {
     const [total, pending, active, deactivated, rejected, admins] = await Promise.all([
@@ -39,7 +39,7 @@ const getUserStats = async (req, res) => {
   }
 };
 
-// @route  PATCH /api/users/:id/approve
+// @route   PATCH /api/users/:id/approve
 const approveUser = async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
@@ -54,7 +54,7 @@ const approveUser = async (req, res) => {
   }
 };
 
-// @route  PATCH /api/users/:id/reject
+// @route   PATCH /api/users/:id/reject
 const rejectUser = async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
@@ -69,8 +69,8 @@ const rejectUser = async (req, res) => {
   }
 };
 
-// @route  PATCH /api/users/:id/toggle-active
-// @desc   Activate a deactivated user, or deactivate an active one.
+// @route   PATCH /api/users/:id/toggle-active
+// @desc    Activate a deactivated user, or deactivate an active one.
 const toggleActive = async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
@@ -92,8 +92,8 @@ const toggleActive = async (req, res) => {
   }
 };
 
-// @route  PATCH /api/users/:id/role
-// @desc   Promote/demote a user between "user" and "admin"
+// @route   PATCH /api/users/:id/role
+// @desc    Promote/demote a user between "user" and "admin"
 const changeRole = async (req, res) => {
   try {
     const { role } = req.body;
@@ -117,4 +117,30 @@ const changeRole = async (req, res) => {
   }
 };
 
-module.exports = { getUsers, getUserStats, approveUser, rejectUser, toggleActive, changeRole };
+// @route   DELETE /api/users/:id
+// @desc    Admin: Delete a user account permanently
+const deleteUser = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    if (req.user.id === String(user._id)) {
+      return res.status(400).json({ message: "You cannot delete your own admin account" });
+    }
+
+    await user.deleteOne();
+    return res.status(200).json({ message: "User deleted successfully" });
+  } catch (error) {
+    return res.status(500).json({ message: "Failed to delete user", error: error.message });
+  }
+};
+
+module.exports = {
+  getUsers,
+  getUserStats,
+  approveUser,
+  rejectUser,
+  toggleActive,
+  changeRole,
+  deleteUser,
+};

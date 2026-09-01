@@ -8,6 +8,7 @@ const {
   rejectUser,
   toggleActive,
   changeRole,
+  deleteUser,
 } = require("../controllers/userController");
 
 const router = express.Router();
@@ -21,5 +22,6 @@ router.patch("/:id/approve", approveUser);
 router.patch("/:id/reject", rejectUser);
 router.patch("/:id/toggle-active", toggleActive);
 router.patch("/:id/role", changeRole);
+router.delete("/:id", deleteUser);
 
 module.exports = router;

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Search, Check, X as XIcon, Power, ShieldPlus, ShieldMinus } from "lucide-react";
+import { Search, Check, X as XIcon, Power, ShieldPlus, ShieldMinus, Trash2 } from "lucide-react"; // <-- Trash2 added here
 import AppShell from "../../components/AppShell";
 import StatusBadge from "../../components/StatusBadge";
 import Loader from "../../components/Loader";
@@ -41,6 +41,7 @@ const ManageUsers = () => {
       if (action === "reject") await api.patch(`/users/${id}/reject`);
       if (action === "toggle") await api.patch(`/users/${id}/toggle-active`);
       if (action === "role") await api.patch(`/users/${id}/role`, { role: payload });
+      if (action === "delete") await api.delete(`/users/${id}`); // <-- Delete API call added
       load();
     } catch (err) {
       alert(err.response?.data?.message || "Action failed");
@@ -144,6 +145,21 @@ const ManageUsers = () => {
                         >
                           {u.role === "admin" ? <ShieldMinus size={13} /> : <ShieldPlus size={13} />}
                           {u.role === "admin" ? "Demote" : "Make admin"}
+                        </button>
+                      )}
+                      
+                      {/* --- DELETE BUTTON ADDED HERE --- */}
+                      {u.id !== currentUser.id && (
+                        <button
+                          disabled={busyId === u.id}
+                          onClick={() => {
+                            if(window.confirm("Are you sure you want to delete this user?")) {
+                              act(u.id, "delete");
+                            }
+                          }}
+                          className="flex items-center gap-1 text-xs font-medium text-danger bg-danger-bg rounded-md px-2.5 py-1.5 hover:opacity-80 disabled:opacity-50"
+                        >
+                          <Trash2 size={13} /> Delete
                         </button>
                       )}
                     </div>
